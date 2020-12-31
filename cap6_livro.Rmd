@@ -1,0 +1,403 @@
+#1 Compromis biais - variance
+
+# Étape très importante 
+# Pour obtenir les même résultats lors des simulations, il faut fixer 
+# le seed. Ainsi, vous devez absolument utiliser les mêmes «seed» que 
+# moi pour obtenir les bonnes valeurs pour le questionnaire.
+
+set.seed(7330)
+
+# Taille de l'échantillon
+n <- 99
+
+# Variance de l'erreur du phénomème 
+sigma2_epsilon <- 5
+
+# On simule des termes d'erreur qui suivent une distribution normale
+epsilon <- rnorm(n = n,
+                 mean = 0,
+                 sd = sqrt(sigma2_epsilon))
+
+# On simule les X
+X <- rnorm(n,
+           mean = 0,
+           sd = 1)
+
+# On calcule Y
+Y <- 3 + 8*X + 2*X^2 + epsilon
+
+# On met nos deux variables dans un seul tableau de données (ceci facilite généralement l'utilisation de plusieurs fonctions par la suite, dont les fonctions «predict»)
+
+don <- data.frame(Y=Y, # Nom de la variable = données
+                  X=X) # Nom de la variable = données)
+
+#Nettoyer
+#rm(X,Y,epsilon)
+
+#1.1 Faire un modèle de régression
+
+
+model_1 <- lm(Y~X, # Y ~ X1 + X2 + ... Voir ?formula
+            data = don) # Le jeu de données
+            
+summary(model_1)
+
+y_chapeau <- predict(model_1)
+
+library(MLmetrics)
+
+MSE(y_pred=y_chapeau, y_true=Y)
+
+#13.25361 ok
+
+#1.2 Calculer la «vraie erreur»
+
+set.seed(seed = 1)
+
+# Un échantillon très grands nous donnera une bonne estimation de notre erreur
+
+n_valid <- 10000
+
+# On simule des termes d'erreur qui suivent une distribution normale
+epsilon <- rnorm(n = n_valid ,
+                 mean = 0,
+                 sd = sqrt(sigma2_epsilon))
+
+# On simule les X
+X <- rnorm(n_valid,
+           mean = 0,
+           sd = 1)
+
+# On calcule Y
+Y <- 3 + 8*X + 2*X^2 + epsilon
+
+# On met nos deux variables dans un seul tableau de données (ceci facilite généralement l'utilisation de plusieurs fonctions par la suite, dont les fonctions «predict»)
+
+don_valid <- data.frame(Y=Y, # Nom de la variable = données
+                  X=X) # Nom de la variable = données)
+                  
+                  
+
+#Nettoyer
+#rm(X,Y,epsilon)
+
+y_chapeau_valid <- predict(model_1, # Le modèle
+                           # La ligne suivante spécifie le jeu de données sur
+                           # lequel on veut une prédiction. On doit le 
+                           # spécifier si on ne veut pas une prédiction sur 
+                           # le jeu de données original. Attention! Le nom des
+                           # variables doit être identique!
+                           newdata = don_valid)
+
+
+MSE(y_pred=y_chapeau_valid, y_true=Y)
+
+
+#1.3 Ajustez un polynôme d’ordre 2
+
+rm(y_chapeau,y_chapeau_valid)
+
+set.seed(1)
+
+model_2 <- lm(Y~ X + I(X^2), # Remarquez la syntaxe pour spécifier le carré
+              data = don)
+
+y_chapeau <- predict(model_2)
+
+y_chapeau_valid <- predict(model_2, # Le modèle
+                           # La ligne suivante spécifie le jeu de données sur
+                           # lequel on veut une prédiction. On doit le 
+                           # spécifier si on ne veut pas une prédiction sur 
+                           # le jeu de données original. Attention! Le nom des
+                           # variables doit être identique!
+                           newdata = don_valid)
+
+MSE(y_pred=y_chapeau, y_true=don$Y)
+
+
+MSE(y_pred=y_chapeau_valid, y_true=don_valid$Y)
+
+
+#1.4 Ajustez un polynôme d’ordre 10
+
+rm(y_chapeau,y_chapeau_valid)
+
+model_10 <- lm(Y~ poly(X,10),
+              data = don)
+
+y_chapeau <- predict(model_10)
+
+y_chapeau_valid <- predict(model_10, 
+                           newdata = don_valid)
+                           
+                           
+
+MSE(y_pred=y_chapeau, y_true=don$Y)
+
+
+MSE(y_pred=y_chapeau_valid, y_true=don_valid$Y)
+
+
+
+#1.5 Ajoutez une variable inutile
+
+
+rm(y_chapeau,y_chapeau_valid)
+
+# Fixer le seed
+set.seed(seed=123)
+
+# Ajouter une variable inutile aux deux jeux de données
+don$X2 <- rnorm(n)
+
+don_valid$X2 <- rnorm(n_valid)
+
+# Faire un modèle linéaire avec la nouvelle 
+model_1_2 <- lm( Y~ X  + X2, data = don)
+summary(model_1_2 )
+
+y_chapeau <- predict(model_1_2)
+
+y_chapeau_valid <- predict(model_1_2, 
+                           newdata = don_valid)
+                           
+                           
+MSE(y_pred=y_chapeau, y_true=don$Y)
+
+
+MSE(y_pred=y_chapeau_valid, y_true=don_valid$Y)
+
+
+#1.6 Ajoutez plusieurs variable inutile mais corrélée à X
+
+
+rm(y_chapeau,y_chapeau_valid)
+
+# Ajouter une variable inutile aux deux jeux de données
+set.seed(seed=14)
+don$X3 <- don$X + rnorm(n,0,1)
+don_valid$X3 <- don_valid$X + rnorm(n_valid,0,1)
+don$X4 <- don$X + rnorm(n,0,1)
+don_valid$X4 <- don_valid$X + rnorm(n_valid,0,1)
+don$X5 <- don$X + rnorm(n,0,1)
+don_valid$X5 <- don_valid$X + rnorm(n_valid,0,1)
+
+# Faire un modèle linéaire
+model_1_2_cor <- lm(Y~ X + X3 + X4 + X5,
+                    data = don)
+summary(model_1_2_cor)
+y_chapeau <- predict(model_1_2_cor)
+
+y_chapeau_valid <- predict(model_1_2_cor, 
+                           newdata = don_valid)
+                           
+                           
+                           
+#Calculez l’EQM sur les échantillons d’entraînement et de validation.
+
+
+                           
+MSE(y_pred=y_chapeau, y_true=don$Y)
+
+
+MSE(y_pred=y_chapeau_valid, y_true=don_valid$Y)
+
+
+#2 Validation croisée
+
+
+
+#Cap 6 do livro
+
+
+y_vrai <- c(1,0,1,0,1,0,1,0,1,0, 1,0,1,0,1,0,1,0,1,0)
+y_predit <- c(1,1,1,0,0,0,1,0,1,1, 1,0,1,0,1,0,1,0,1,1)
+y_proba <- c(0.9,0.55,0.65,0.32,0.35,0.25,0.52,0.45,0.84,0.65, 0.89,0.11,0.56,0.26,0.74,0.22,0.59,0.06,0.62,0.55)
+don <- data.frame(y_vrai, y_proba, y_predit)
+
+library(knitr)
+
+
+kable(don,
+      caption = 'Données pour illustrer les mesures de performance pour les $Y$ binaires')
+      
+      
+# Matrice de confusion
+confusion <- table(y_vrai,y_predit)
+
+# Matrice de confusion avec les marges
+confusion_marges <- addmargins(confusion)      
+
+
+# Matrice de confusion
+ConfusionMatrix(y_pred = y_predit, 
+                y_true = y_vrai)
+                
+# Exactitude
+exactitude <- Accuracy(y_pred = y_predit, 
+                       y_true = y_vrai)
+                       
+                       
+precision <- Precision(y_pred = y_predit, 
+                       y_true = y_vrai, 
+                       positive = 1)
+
+# Sensibilité
+sensibilite <- Sensitivity(y_true = y_vrai, 
+            y_pred = y_predit,
+            positive = 1)
+
+# Rappel
+sensibilite <- Recall(y_true = y_vrai, 
+            y_pred = y_predit,
+            positive = 1)
+            
+# Spécificité
+specificite <- Specificity(y_true = y_vrai, 
+            y_pred = y_predit,
+            positive = 1)
+#F1
+
+f1 <- F1_Score(y_true = y_vrai, 
+            y_pred = y_predit,
+            positive = 1)
+            
+    
+            
+# Construire une courbe ROC
+# J'utilise la librairie pROC
+library(pROC)
+library(plotly)
+ROC <- roc(response = y_vrai,
+           predictor = y_proba)
+
+ROC_dat <- data.frame(un_moins_specificite = rev(1 - ROC$specificities), 
+                      specificite = rev(ROC$specificities), 
+                      sensibilite = rev(ROC$sensitivities), 
+                      seuil = rev(ROC$thresholds))
+
+courbe_roc <- ggplot(ROC_dat) +
+        geom_line(aes(un_moins_specificite,sensibilite, label = seuil))+
+        #geom_label(aes(un_moins_specificite,sensibilite, label = seuil))+
+        ylab('Sensibilite (taux de vrais positifs)')+
+        xlab('1-specificite (taux de faux positifs)')
+
+ggplotly(courbe_roc, tooltip =  c('seuil', 'sensibilite', 'un_moins_specificite'))
+
+# Calcul de l'aire sous la courbe ROC
+aire <- AUC(y_pred = y_proba, y_true = y_vrai)
+
+library(dplyr)
+
+taux_rep <- don %>% 
+        arrange(desc(y_proba)) %>%
+        mutate(groupe = as.factor(rep(1:5, each = 4))) %>%
+        group_by(groupe)%>%
+        summarize( taille_groupe = 4, positif_obs = sum(y_vrai), taux_rep = positif_obs/4) %>%
+        mutate(taux_rep_cum =  cumsum(positif_obs)/cumsum(taille_groupe))
+        
+        
+kable(taux_rep,
+      caption = 'Taux de réponse',
+      col.names = c('Nombre d\'observations dans le groupe', 'Groupe', 'Nombre d\'observations positives','Taux de réponse', 'Taux de réponse cumulé'))
+
+
+nb_positifs_ech <- sum(don$y_vrai)
+taux_rep_capt <- don %>% 
+        arrange(desc(y_proba)) %>%
+        mutate(groupe = as.factor(rep(1:5, each = 4))) %>%
+        group_by(groupe) %>%
+        summarize(positif_obs = sum(y_vrai))  %>%
+        mutate(taux_capture = positif_obs/nb_positifs_ech, capture_cum =  cumsum(positif_obs)/nb_positifs_ech)
+kable(taux_rep_capt,
+      caption = 'Taux de capture',
+      col.names = c('Groupe', 'Nombre d\'observations positives','Taux de capture', 'Taux de capture cumulé'))
+
+
+proportion_potitif_ech <- mean(don$y_vrai)
+levier <- don %>% 
+        arrange(desc(y_proba)) %>%
+        mutate(groupe = as.factor(rep(1:5, each = 4))) %>%
+        group_by(groupe)%>%
+        summarize(taux_rep = sum(y_vrai)/4) %>%
+        ungroup() %>%
+        mutate(levier = taux_rep/proportion_potitif_ech ) 
+
+kable(levier,
+      caption = 'Levier',
+      col.names = c('Groupe', 'Taux de réponse', 'Levier'))
+      
+      
+      
+      
+#Validation-Croisee
+
+rm(don)
+
+# Permuter 
+cv <- don[sample(nrow(don)),]
+
+# Separer 
+fold <- cut(seq(1, nrow(cv)), breaks=10, labels=FALSE)
+
+# faire le porcessus
+
+resultats <- data.frame(matrix(nrow = 10, ncol = 3))
+
+colnames(resultats) <- c("i", "Modele_1", 'Modele_2')
+
+for (i in 1:10){
+  #diviser les donnes avec la fonction wich
+  
+  indice <- which(fold==i, arr.ind=TRUE)
+  
+  #Exclure k
+  
+  train <- cv[-indice,]
+  
+  # les autres k pour faire la validation
+  
+  valid <- cv[indice,]
+  
+  #executer les modeles
+  
+  m1 <- lm(Y~X, data = train)
+  m2 <- lm(Y~ X + I(X^2), data = train)
+  
+  # prediction pour entrainement
+  
+  y_train_1 <- predict(m1)
+  
+  y_train_2 <- predict(m2)
+  
+  # prediction pour validation
+  
+  y_valid_1 <- predict(m1, newdata = valid)
+  
+  y_valid_2 <- predict(m2, newdata = valid)
+  
+  #EQM sur le donnees de validation
+  
+
+  resultats[i, 1] <- i
+  resultats[i, 2] <- MSE(y_pred=y_valid_1, y_true=valid$Y)
+  resultats[i, 3] <- MSE(y_pred=y_valid_2, y_true=valid$Y)
+  
+}
+
+
+
+resultats <- gather(resultats, "Modele_1", 'Modele_2', key='Modele', value='EQM' )
+
+
+
+boxplot <- ggplot(data = resultats,
+                aes(x = Modele, 
+                    y = EQM,
+                    color=Modele))+ 
+  geom_boxplot(outlier.colour="black")+
+  theme_minimal() 
+
+boxplot
+
+
