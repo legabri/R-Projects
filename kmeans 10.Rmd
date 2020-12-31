@@ -1,0 +1,91 @@
+---
+title: 'Classification'
+author: 'Dataset res.PCA'
+output:
+  word_document: default
+---
+.
+
+- - -
+
+```{r, echo = FALSE}
+library(FactoMineR)
+load('/home/gabriel/Workspace.RData')
+```
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 5.5, fig.width = 5.5}
+drawn <-
+c("30", "94", "19", "95", "2", "17", "26", "53", "81", "31", 
+"40", "5", "46", "99", "98", "85")
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.HCPC(res, choice = 'tree', title = '')
+```
+
+**Figure 1.1 - Hierarchical tree.**
+
+The classification made on individuals reveals 10 clusters.
+
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 5.5, fig.width = 5.5}
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.HCPC(res, choice = 'map', draw.tree = FALSE, title = '')
+```
+
+**Figure 1.2 - Ascending Hierarchical Classification of the individuals.**
+
+The **cluster 1** is made of individuals such as *81*. This group is characterized by :
+
+- low values for the variables *salaire_2013*, *emprunt*, *dette_2013* and *poids* (variables are sorted from the weakest).
+
+The **cluster 2** is made of individuals sharing :
+
+- high values for the variables *dette_2013* and *emprunt* (variables are sorted from the strongest).
+- low values for the variables *salaire_2013* and *age* (variables are sorted from the weakest).
+
+The **cluster 3** is made of individuals such as *40*. This group is characterized by :
+
+- low values for the variables *salaire_2013*, *emprunt*, *dette_2013* and *age* (variables are sorted from the weakest).
+
+The **cluster 4** is made of individuals such as *2*, *17*, *26*, *85* and *94*. This group is characterized by :
+
+- low values for the variables *emprunt*, *dette_2013*, *salaire_2013* and *age* (variables are sorted from the weakest).
+
+The **cluster 5** is made of individuals such as *53*. This group is characterized by :
+
+- high values for the variable *emprunt*.
+- low values for the variables *age* and *dette_2013* (variables are sorted from the weakest).
+
+The **cluster 6** is made of individuals such as *5*, *19* and *46*. This group is characterized by :
+
+- high values for the variables *salaire_2013* and *poids* (variables are sorted from the strongest).
+- low values for the variables *emprunt*, *dette_2013* and *age* (variables are sorted from the weakest).
+
+The **cluster 7** is made of individuals such as *30*. This group is characterized by :
+
+- high values for the variables *dette_2013*, *emprunt* and *salaire_2013* (variables are sorted from the strongest).
+- low values for the variable *age*.
+
+The **cluster 8** is made of individuals such as *95*. This group is characterized by :
+
+- high values for the variables *salaire_2013* and *age* (variables are sorted from the strongest).
+- low values for the variables *emprunt* and *dette_2013* (variables are sorted from the weakest).
+
+The **cluster 9** is made of individuals such as *98* and *99*. This group is characterized by :
+
+- high values for the variables *emprunt*, *salaire_2013* and *dette_2013* (variables are sorted from the strongest).
+
+The **cluster 10** is made of individuals such as *31*. This group is characterized by :
+
+- high values for the variables *salaire_2013* and *age* (variables are sorted from the strongest).
+- low values for the variables *dette_2013*, *emprunt* and *poids* (variables are sorted from the weakest).
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 5.5, fig.width = 5.5}
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.HCPC(res, choice = '3D.map', ind.names=FALSE, title = '')
+```
+
+**Figure 1.3 - Hierarchical tree on the factorial map.**
+
+The hierarchical tree can be drawn on the factorial map with the individuals colored according to their clusters.
+
+
