@@ -1,4 +1,4 @@
-Projects and exercises made in a master course ( Data Analanysis Methods) at Laval University.
+Projects and exercises made in a master course (Data Analysis Methods) at Laval University.
 
 We use R language and RStudio and a lot of R packages like:
 
