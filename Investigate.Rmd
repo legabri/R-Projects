@@ -8,6 +8,10 @@ output:
 
 - - -
 
+
+
+
+
 ```{r, echo = FALSE}
 library(FactoMineR)
 load('/home/gabriel/Workspace.RData')
