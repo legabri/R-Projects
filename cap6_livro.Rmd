@@ -5,6 +5,8 @@
 # le seed. Ainsi, vous devez absolument utiliser les mêmes «seed» que 
 # moi pour obtenir les bonnes valeurs pour le questionnaire.
 
+
+
 set.seed(7330)
 
 # Taille de l'échantillon
