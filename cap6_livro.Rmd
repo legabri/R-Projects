@@ -64,6 +64,7 @@ epsilon <- rnorm(n = n_valid ,
                  sd = sqrt(sigma2_epsilon))
 
 # On simule les X
+
 X <- rnorm(n_valid,
            mean = 0,
            sd = 1)
