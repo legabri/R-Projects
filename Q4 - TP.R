@@ -20,6 +20,7 @@ library(MLmetrics)
 
 
 
+
 #exclusion du ID
 
 df<-entrain_valid %>%  
