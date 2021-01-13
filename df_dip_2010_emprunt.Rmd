@@ -8,6 +8,8 @@ This dataset contains 10342 individuals and 59 variables, 2 quantitative variabl
 
 - - -
 
+
+
 ```{r, echo = FALSE}
 library(FactoMineR)
 load('/home/gabriel/Workspace.RData')
