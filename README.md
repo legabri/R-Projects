@@ -15,6 +15,7 @@ magrittr
 leaflet
 
 mice
+
 DT
 
 graphics
