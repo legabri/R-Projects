@@ -4,6 +4,8 @@ author: 'Dataset res.PCA'
 output:
   word_document: default
 ---
+
+
 .
 
 - - -
