@@ -3,6 +3,7 @@ title: 'Multiple Correspondence Analysis'
 author: 'Dataset df'
 output:
   html_document: default
+
 ---
 This dataset contains 10342 individuals and 53 variables, 2 quantitative variables are considered as illustrative, 6 qualitative variables are considered as illustrative.
 
