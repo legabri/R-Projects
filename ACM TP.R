@@ -15,6 +15,7 @@ plot.MCA(res.MCA, choix='quanti.sup')
 
 
 
+
 library(Factoshiny)
 
 res2 <- Factoshiny(df[1:19])
