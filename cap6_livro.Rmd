@@ -9,6 +9,7 @@
 
 set.seed(7330)
 
+
 # Taille de l'échantillon
 n <- 99
 
