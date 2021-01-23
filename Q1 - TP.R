@@ -7,6 +7,9 @@ library(FactoMineR)
 library(plotly)
 library(ggplot2)
 library(rgl)
+
+
+
 library(rglwidget)
 library(htmltools)
 library(Factoshiny)
