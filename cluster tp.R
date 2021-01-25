@@ -11,6 +11,7 @@ mca <- Factoshiny(df[1:19])
 
 
 
+
 #cluster_entrain_valid
 
 peso <- (df$poids-min(df$poids))/(max(df$poids)-min(df$poids))
