@@ -207,6 +207,7 @@ p_ex_2_test_var_spec <- predict(model_ex_2_var_spec, df_ex_2_var_spec_test, type
 #exactitude, precision et importance test
 
 
+
 Accuracy(y_pred = p_ex_2_test_var_spec$predictions, y_true = df_ex_2_var_spec_test$satisfaction_emploi)
 
 Precision(y_pred = p_ex_2_test_var_spec$predictions, y_true = df_ex_2_var_spec_test$satisfaction_emploi)
