@@ -1,4 +1,4 @@
-#Q1
+#Q1 
 
 #chargemente des libraries
 
@@ -7,7 +7,7 @@ library(FactoMineR)
 library(plotly)
 library(ggplot2)
 library(rgl)
-
+  
 
 
 library(rglwidget)
